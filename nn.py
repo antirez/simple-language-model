@@ -14,6 +14,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 200 # To estimate the loss. Higher = more precise but slower.
 char_encoding_len = 12 # Number of inputs for each character. Must be even.
 use_batch_norm = False
+dropout_rate=0.2
 # ------------
 
 torch.manual_seed(1337)
@@ -127,7 +128,7 @@ def estimate_loss():
 
 # Toy language model. N chars in input -> next char prediction.
 class SimpleLanguageModel(nn.Module):
-    def __init__(self, dropout_rate=0.2):
+    def __init__(self):
         hidden_nodes = max_hidden_nodes
         super().__init__()
 
