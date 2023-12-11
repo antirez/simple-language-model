@@ -233,7 +233,7 @@ val_data = data[n:]
 iter_duration = 0
 if __name__ == "__main__":
     # Log the loss in some target file
-    model_id = f"loss_BA:{batch_size}_BL:{block_size}_PAR:{model_million_params:.2f}_E:{char_encoding_len}_V:{vocab_size}_BN:{use_batch_norm}_LR:{learning_rate}_{os.path.basename(filename)}"
+    model_id = f"loss_BA:{batch_size}_BL:{block_size}_PAR:{model_million_params:.2f}_E:{char_encoding_len}_V:{vocab_size}_BN:{use_batch_norm}_LR:{learning_rate}_DR:{dropout_rate}_{os.path.basename(filename)}"
     model_filename = model_id+".pth"
 
     # If a model with this parameters was already trained, don't overwrite
