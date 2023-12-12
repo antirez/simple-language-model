@@ -1,6 +1,6 @@
 Some time ago [Andrej Karpathy](https://karpathy.ai/) released this [great video](https://www.youtube.com/watch?v=kCc8FmEb1nY) where he shows step by step how to build a small language model which uses [attention](https://arxiv.org/abs/1706.03762) to predict the next character in a sequence.
 
-I published a [video]() that shows how powerful transformers are at what they do by reimplementing the same neural network without using anything related to transofmers and in general *any prior* that we know about NLP tasks. This way we can explore both how powerful transformers are, since they provide much better results, and at the same time how incredibly versatile feed-forward networks (the foundation of it all, after all) are at handling unknown tasks.
+I published a [video](https://youtu.be/EXbgUXt8fFU) that shows how powerful transformers are at what they do by reimplementing the same neural network without using any modern trick and in general *any prior* that we know about the NLP task we are addressing. This way we can explore both how powerful transformers are, since they provide much better results, and at the same time how incredibly versatile feed-forward networks (the foundation of it all, after all) are at handling unknown tasks.
 
 ## Permutation encoding
 
