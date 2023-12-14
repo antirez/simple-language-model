@@ -14,6 +14,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 200 # To estimate the loss. Higher = more precise but slower.
 char_encoding_len = 12 # Number of inputs for each character. Must be even.
 use_batch_norm = False
+use_attention = False
 dropout_rate=0.2
 # ------------
 
@@ -143,7 +144,18 @@ class SimpleLanguageModel(nn.Module):
 
         hidden_nodes //= 2
 
-        self.fc3 = nn.Linear(hidden_nodes, hidden_nodes)
+        # This is an implementation of attention for this feed-forward
+        # network that is able to make it perform better. See
+        # the forward() code for more info.
+        if use_attention:
+            self.attention1 = nn.Linear(hidden_nodes, hidden_nodes)
+            self.attention2 = nn.Linear(hidden_nodes, block_size)
+
+        # We need additional "input_size" units in the next layer
+        # only if attention is used. Since we concatenate to this layer
+        # the inputs weighted by attention.
+        input_size = 0 if not use_attention
+        self.fc3 = nn.Linear(hidden_nodes+input_size, hidden_nodes)
         if use_batch_norm: self.bn3 = nn.BatchNorm1d(hidden_nodes)
         self.do3 = nn.Dropout(dropout_rate)
 
@@ -165,6 +177,34 @@ class SimpleLanguageModel(nn.Module):
         if use_batch_norm: x = self.bn2(x)
         x = F.relu(x)
         x = self.do2(x)
+
+        if use_attention:
+            # Attention calculation and mixing: we have two standalone
+            # layers that we use for our attention mechanism. The goal is
+            # to take as input an intermediate state of the feed-forward
+            # NN, and learn as many attention weights as the number of
+            # input characters we have (block_size).
+            #
+            # Note that in this simplified attention mechanism, we don't
+            # use self-attention here, so there is no relationship between
+            # different tokens. This is more kinda of a content-based
+            # attention that just assigns a weight to each token separately.
+            x2 = F.relu(self.attention1(x))
+            x2 = self.attention2(x2)
+            attention_weights = F.softmax(x2, dim=1)
+
+            # Now, since we know that each of our characters is represented
+            # by char_encoding_len inputs, we duplicate the weights
+            # char_encoding_len times to prepare for matrix multiplication.
+            attention_weights_expanded = torch.repeat_interleave(attention_weights, char_encoding_len, dim=1)
+
+            # Now multiply each input character, composed of char_encoding_len
+            # inputs, by the corresponding attention weight.
+            attention_applied = attention_weights_expanded * inp
+
+            # Finally we concatenate the weighted-input to the current
+            # internal state, and give it all to the next layer.
+            x = torch.cat((x, attention_applied), dim=1)
 
         x = self.fc3(x)
         if use_batch_norm: x = self.bn3(x)
