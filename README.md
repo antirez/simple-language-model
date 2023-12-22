@@ -4,7 +4,7 @@ I published a [video](https://youtu.be/EXbgUXt8fFU) that shows how powerful tran
 
 ## Permutation encoding
 
-In the video I introduced an encoding schema that I call *permutation encoding*, as an alternative to one-hot and binary encoding (we didn't want to use embeddings becuase of the goals of the experiment). Probably I re-invented work already done, but I don't know when and if it was used previously.
+In the video I introduced an encoding schema that I call *permutation encoding*, as an alternative to one-hot and binary encoding (we didn't want to use embeddings because of the goals of the experiment). Probably I re-invented work already done, but I don't know when and if it was used previously.
 
 Permutation encoding is an alternative to one-hot encoding (0001, 0010, 0100, 1000) and binary encoding (00, 01, 10, 11), that uses permutations of bits arrays of fixed lengths having the same amount of zeros and ones (1010, 0101, 1100, 0011). It avoids the sparsity of one-hot encoding and the biases of binary encoding at the same time. It still wastes 50% of the first hidden layer weights, but looks better than the above two alternatives.
 
