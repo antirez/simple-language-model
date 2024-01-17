@@ -154,7 +154,7 @@ class SimpleLanguageModel(nn.Module):
         # We need additional "input_size" units in the next layer
         # only if attention is used. Since we concatenate to this layer
         # the inputs weighted by attention.
-        input_size = 0 if not use_attention
+        input_size = 0 if not use_attention else input_size
         self.fc3 = nn.Linear(hidden_nodes+input_size, hidden_nodes)
         if use_batch_norm: self.bn3 = nn.BatchNorm1d(hidden_nodes)
         self.do3 = nn.Dropout(dropout_rate)
